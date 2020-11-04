@@ -27,23 +27,39 @@ session_start();
                 plugins: [ 'interaction', 'dayGrid'],
                 selectable: true,
                 height: 'parent',
-                //selectMirror: true,
-                //defaultDate: '2019-04-12',
-                editable: true,
+                editable: false,
                 eventLimit: true, // allow "more" link when too many events
                 events: 'list_events.php',
                 eventClick: function(info) {
-                    $("#deleleEvent").attr("href", "http://localhost/agendamento/delete.php?id="+info.event.id),
+                    //$("#deleleEvent").attr("href", "http://localhost/agendamento/delete.php?id="+info.event.id),
                     info.jsEvent.preventDefault(), // don't let the browser navigate
                     $('#modalVisu #id').text(info.event.id),
                     $('#modalVisu #title').text(info.event.title),
                     $('#modalVisu #start').text(info.event.start.toLocaleString()),
                     $('#modalVisu #end').text(info.event.end.toLocaleString()),
+                    $('#modalVisu #usuario').text(info.event.extendedProps.usuario),
+
+                    console.log(info.event.backgroundColor)
+                    switch(info.event.backgroundColor) {
+                        case "#ff5733":
+                            $('#modalVisu #color').text("sala1");
+                            break;
+                        case "#5DADE2":
+                            $('#modalVisu #color').text("Sala2");
+                            break;
+                        case "#F4D03F":
+                            $('#modalVisu #color').text("Sala3");
+                            break;
+                        case "#C39BD3":
+                            $('#modalVisu #color').text("Sala4");
+                            break;
+                    }
+
                     $('#modalVisu').modal('show')
+
                 },
+
                 select: function(info) {
-                    //$('#cadastroEvento #start').val(info.start.toLocaleString())
-                    //$('#cadastroEvento #end').val(info.start.toLocaleString())
                     let dateStr = info.start.toLocaleString();
                     let dateStrConv = dateStr.replace("00:00:00", "");
                     $('#cadastroEvento #start').val(dateStrConv)
@@ -163,6 +179,13 @@ session_start();
 
                     <dt class="col-sm-3">Fim</dt>
                     <div class="col-sm-9" id="end"></div>
+
+                    <dt class="col-sm-3">Usuario</dt>
+                    <div class="col-sm-9" id="usuario"></div>
+
+                    <dt class="col-sm-3">Sala</dt>
+                    <div class="col-sm-9" id="color"></div>
+
                 </div>
             </div>
             <div class="modal-footer">
@@ -186,6 +209,14 @@ session_start();
             <div class="modal-body">
                 <span id="msg-cad"></span>
                 <form id="AddEvento" method="POST">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3">usuario</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="usuario" class="form-control" id="usuario" placeholder="usuario">
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         <label class="col-sm-3">Titulo</label>
                         <div class="col-sm-9">
@@ -195,7 +226,12 @@ session_start();
                     <div class="form-group row">
                         <label class="col-sm-3">Cor</label>
                         <div class="col-sm-9">
-                            <input type="text" name="Color" class="form-control" id="color" placeholder="Selecione">
+                            <select class="form-control" id="color" name="color">
+                                <option value="#FF5733">sala 1</option>
+                                <option value="#5DADE2">sala 2</option>
+                                <option value="#F4D03F">sala 3</option>
+                                <option value="#C39BD3">sala 4</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">

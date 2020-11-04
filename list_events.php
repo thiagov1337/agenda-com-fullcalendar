@@ -1,14 +1,16 @@
 <?php
+session_start();
 include 'conexao.php';
 
 //$conn = new PDO("mysql:host=localhost;dbname=db_agenda", "root", "");
-$sql = "SELECT id, title, color, start, end FROM tb_eventos";
+$sql = "SELECT usuario, id, title, color, start, end FROM tb_eventos";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 
 $eventos = [];
 
 while ($row_events = $stmt->fetch(PDO::FETCH_ASSOC)){
+    $usuario = $row_events['usuario'];
     $id = $row_events['id'];
     $title = $row_events['title'];
     $color = $row_events['color'];
@@ -16,6 +18,7 @@ while ($row_events = $stmt->fetch(PDO::FETCH_ASSOC)){
     $end = $row_events['end'];
 
     $eventos[] = [
+        'usuario' => $usuario,
         'id' => $id,
         'title' => $title,
         'color' => $color,
@@ -23,5 +26,4 @@ while ($row_events = $stmt->fetch(PDO::FETCH_ASSOC)){
         'end' => $end
     ];
 }
-
 echo json_encode($eventos);
